@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
@@ -148,31 +149,17 @@ func registraLog(sites []string) {
 	return
 }
 
-
 func imprimeLogs() {
-	file, err := os.Open("log.txt")
-
+	file, err := ioutil.ReadFile("log.txt")
+	
 	if err != nil {
 		fmt.Println(err)
-	} else {
-		logs := bufio.NewReader(file)
-
-		for {
-			if err != nil {
-				fmt.Println(err)
-			} else {
-				lines, err := logs.ReadString('\n')
-				lines = strings.TrimSpace(lines)
-
-				if err == io.EOF {
-					break
-				}
-
-				fmt.Println(lines)
-			}
-		}
+		os.Exit(-1)
 	}
-	
-	endOfLine()
-}
 
+	if len(file) <= 0 {
+		fmt.Println("Nenhum log encontrado, inicie um monitoramento.")
+	}
+
+	fmt.Println(string(file))
+}
